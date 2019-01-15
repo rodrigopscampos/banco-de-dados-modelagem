@@ -375,22 +375,26 @@ INSERT INTO `professores` (`id`, `nome`, `documento`, `email`) VALUES (50,'Barry
 --
 
 DROP TABLE IF EXISTS `turmas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `turmas` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dt_inicio` date DEFAULT NULL,
-  `dt_fim` date DEFAULT NULL,
-  `duracao` time NOT NULL,
-  `cursos_id` int(11) NOT NULL,
-  `professor_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `escola`.`turmas` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `dt_inicio` DATE NULL DEFAULT NULL,
+  `dt_fim` DATE NULL DEFAULT NULL,
+  `duracao` TIME NOT NULL,
+  `cursos_id` INT(11) NULL DEFAULT NULL,
+  `professor_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_turma_cursos1_idx` (`cursos_id`),
-  KEY `fk_turma_professor1_idx` (`professor_id`),
-  CONSTRAINT `fk_turma_cursos1` FOREIGN KEY (`cursos_id`) REFERENCES `cursos` (`id`),
-  CONSTRAINT `fk_turma_professor1` FOREIGN KEY (`professor_id`) REFERENCES `professores` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `fk_turma_cursos1_idx` (`cursos_id` ASC) VISIBLE,
+  INDEX `fk_turma_professor1_idx` (`professor_id` ASC) VISIBLE,
+  CONSTRAINT `fk_turma_cursos1`
+    FOREIGN KEY (`cursos_id`)
+    REFERENCES `escola`.`cursos` (`id`),
+  CONSTRAINT `fk_turma_professor1`
+    FOREIGN KEY (`professor_id`)
+    REFERENCES `escola`.`professores` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 51
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 --
 -- Dumping data for table `turmas`
