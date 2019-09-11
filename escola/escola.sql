@@ -13,7 +13,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE DATABASE ESCOLA IF NOT EXIST;
+CREATE DATABASE IF NOT EXISTS ESCOLA;
 USE ESCOLA;
 
 --
@@ -400,6 +400,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- Dumping data for table `turmas`
 --
 
+INSERT INTO `turmas` (`id`, `dt_inicio`, `dt_fim`, `duracao`, `cursos_id`, `professor_id`) VALUES (51, now() + interval 1 month , now() + interval 2 month, '17:45:21',11,33);
 INSERT INTO `turmas` (`id`, `dt_inicio`, `dt_fim`, `duracao`, `cursos_id`, `professor_id`) VALUES (1, now() - interval 1 day , now() + interval 20 day, '17:45:21',5,33);
 INSERT INTO `turmas` (`id`, `dt_inicio`, `dt_fim`, `duracao`, `cursos_id`, `professor_id`) VALUES (2,'2019-02-05','2019-02-28','13:45:10',11,37);
 INSERT INTO `turmas` (`id`, `dt_inicio`, `dt_fim`, `duracao`, `cursos_id`, `professor_id`) VALUES (3,'2019-04-07','2019-05-15','11:08:42',2,41);
