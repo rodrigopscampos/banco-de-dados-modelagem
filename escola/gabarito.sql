@@ -164,3 +164,130 @@ from
 group by
 	primeiro_nome
 order by qtd desc
+
+
+-- As turmas do curso de “MySql - Fundamentos” 
+-- (id, dt_inicio, dt_fim, nm_professor) ordenadas por data de início crescente
+
+select * from turmas;
+
+
+select
+	turmas.id,
+    turmas.dt_inicio,
+    turmas.dt_fim,
+    professores.nome as nm_professor,
+    cursos.nome as nm_curso
+from
+	turmas
+    
+    left join professores
+    on turmas.professor_id = professores.id
+    
+    inner join cursos
+    on turmas.cursos_id = cursos.id;
+    
+    
+    
+-- Os cursos que estão em andamento (id_curso, id_turma, nm_curso, dt_inicio, dt_fim)
+select
+	cursos.id as id_curso,
+    turmas.id as id_turma,
+    cursos.nome as nm_curso,
+    turmas.dt_inicio,
+    turmas.dt_fim
+from
+	turmas
+    
+    inner join cursos
+    on turmas.cursos_id = cursos.id
+where
+	dt_inicio <= now() and dt_fim >= now();
+
+
+-- Os professores que não estão atuando em nenhum curso (id, nome, email)
+select * from professores where id not in (
+select professor_id from turmas where dt_inicio <= now() and dt_fim >= now()
+);
+
+select
+	professores.*
+from
+	professores
+    
+    left join turmas
+    on professores.id = turmas.professor_id
+    and turmas.dt_inicio <= now()
+    and turmas.dt_fim >= now()
+where
+	turmas.id is null;
+    
+-- Os professores que estarão sem turma no próximo mês (id_prof, nome, email)
+select * from professores where id not in (
+select professor_id from turmas 
+	where dt_fim > last_day(now())  
+	and   dt_inicio <= last_day(now() + interval 1 month)
+);
+
+
+select
+	professores.*
+from
+	professores
+    
+    left join turmas
+    on professores.id = turmas.professor_id
+    and turmas.dt_fim > last_day(now())  
+	and turmas.dt_inicio <= last_day(now() + interval 1 month)
+where
+	turmas.id is null;
+
+
+-- Os professores que estarão com turma no próximo 
+-- mês (id_prof, nm_prof, email_prof, dt_inicio, dt_fim)
+select * from professores where id in (
+select professor_id from turmas 
+	where dt_fim > last_day(now())  
+	and   dt_inicio <= last_day(now() + interval 1 month)
+);
+
+
+select
+	professores.*
+from
+	professores
+    
+    left join turmas
+    on professores.id = turmas.professor_id
+    and turmas.dt_fim > last_day(now())  
+	and turmas.dt_inicio <= last_day(now() + interval 1 month)
+where
+	turmas.id is not null;
+    
+    
+-- O curso com maior quantidade de alunos (nm_curso, qtd_alunos)
+select
+	cursos.nome,
+    curso_qt_aluno.qtd_alunos
+from
+	cursos
+    inner join 
+(
+	select
+		cursos_id,
+		count(*) qtd_alunos
+	from
+	(
+		select
+			turmas.cursos_id
+		from 
+			aluno_turma
+			
+			join turmas
+			on aluno_turma.turma_id = turmas.id
+	) aluno_curso
+	group by cursos_id
+) curso_qt_aluno
+on cursos.id = curso_qt_aluno.cursos_id
+order by curso_qt_aluno.qtd_alunos desc
+
